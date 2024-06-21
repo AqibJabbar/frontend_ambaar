@@ -17,11 +17,10 @@ export class LoginComponent {
  loginForm!: FormGroup;
   private authService = inject(AuthService)
 
-  constructor(private fb: FormBuilder,private route:Router) {
+  constructor(private fb: FormBuilder, private userService: AuthService, private route:Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      // rememberMe: [false]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
   ngOnInit(){
@@ -32,11 +31,11 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       console.log(this.loginForm.value);
-      this.route.navigateByUrl("/dashboard");
-      const loginRequest: LoginRequest = { email, password };
-      this.authService.login(loginRequest).subscribe(
+      // const loginRequest: LoginRequest = { email, password };
+      this.authService.login(email,password).subscribe(
         response => {
           console.log('Login successful:', response);
+          this.route.navigateByUrl("/dashboard");
           // Handle successful login response here
         },
         error => {
@@ -47,3 +46,25 @@ export class LoginComponent {
     }
   }
 }
+
+// signInForm: FormGroup;
+
+
+
+//   ngOnInit(): void {}
+
+//   onSubmit(): void {
+//     if (this.signInForm.valid) {
+//       const { email, password } = this.signInForm.value;
+//       this.userService.signIn(email, password).subscribe(
+//         response => {
+//           console.log('Sign in successful', response);
+//         },
+//         error => {
+//           console.error('Sign in failed', error);
+//         }
+//       );
+//     } else {
+//       console.log('Form is invalid');
+//     }
+//   }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { LoginRequest } from '../../../core/models/auth.model';
@@ -7,19 +7,26 @@ import { LoginRequest } from '../../../core/models/auth.model';
   providedIn: 'root'
 })
 export class AuthService {
-
-  private apiUrl = ''; // Replace with your API URL
+  private apiUrl = 'http://localhost:8080/api/users/sign-in';
 
   constructor(private http: HttpClient) { }
 
-  login(request: LoginRequest): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.apiUrl, request, { headers })
-      .pipe(
-        map(response => {
-          // Handle successful login response
-          return response;
-        })
-      );
+  login(email: string, password: string): Observable<any> {
+    // const params = new HttpParams()
+    //   .set('email', email)
+    //   .set('password', password);
+    //   // const body = { email, password };
+    // const headers = new HttpHeaders()
+    //   .set('accept', '*/*');
+
+    // return this.http.post<any>(this.apiUrl, { params, headers });
+    const headers = new HttpHeaders({
+      'accept': '*/*',
+      'Content-Type': 'application/json'
+    });
+    
+    const body = { email, password };
+
+    return this.http.post<any>(this.apiUrl, body, { headers });
   }
 }
